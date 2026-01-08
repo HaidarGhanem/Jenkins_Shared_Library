@@ -3,7 +3,8 @@
 def call(Map config = [:]) {
     def user = config.user
     def image = config.image
-    def tag = config.tag ?: "${env.BUILD_NUMBER}"
+    def commitHash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    def tag = config.tag ?: commitHash
     echo "Building Docker image..."
     sh "docker build -t ${user}/${image}:${tag} ."
 }
